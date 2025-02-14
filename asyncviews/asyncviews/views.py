@@ -1,12 +1,19 @@
-import time
-from django.http import JsonResponse
+# views.py - blocking http
 
-def api(request):
-    time.sleep(1)
-    payload = {"message": "Hello World!"}
+import httpx
+import asyncio
+from time import sleep
+from django.http import HttpResponse
 
 
-    if "task_id" in request.GET:
-        payload["task_id"] = request.GET["task_id"]
-    return JsonResponse(payload)
-    
+def http_call_sync():
+    for num in range(1, 6):
+        sleep(1)
+        print(num)
+    r = httpx.get("https://httpbin.org/")
+    print(r)
+
+def sync_view(request):
+    http_call_sync()
+    return HttpResponse("blocking HTTP request")
+
